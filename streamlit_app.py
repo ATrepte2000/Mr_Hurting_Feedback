@@ -203,7 +203,6 @@ st.download_button(
 # Button to generate feedback
 if st.button("📝 Get Feedback on Your Conversation"):
    
-
     feedback_prompt = f"""
     As an expert negotiation coach, provide detailed feedback on the following conversation between a customer and a salesperson. Highlight the customer's negotiation strategies, emotional intelligence, and areas for improvement. Offer practical advice to enhance their negotiation skills.
     
@@ -213,28 +212,19 @@ if st.button("📝 Get Feedback on Your Conversation"):
 
 
     try:
-    response = openai.chat.completions.create(
-        model="gpt-4o-mini",  
-        messages=  messages=[
-                {"role": "system", "content": "You are an expert negotiation coach."},
-                {"role": "user", "content": feedback_prompt}
-            ],
-            temperature=0.7,
-            max_tokens=500,
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",  
+        messages=[
+            {"role": "system", "content": "You are an expert negotiation coach."},
+            {"role": "user", "content": feedback_prompt}
+        ],
+        temperature=0.7,
+        max_tokens=500,
     )
-    # Extrahiere die Antwort
-    feedback_text = response.choices[0].message.content
-    
-
-
-
-
-        # Extract and display the feedback
-        feedback_text = feedback_response.choices[0].message.content.strip()
-        st.markdown("## 📝 Feedback on Your Conversation:")
-        st.write(feedback_text)
-
-    except Exception as e:
-        st.error("An error occurred while generating feedback. Please try again later.")
-        st.write(e)
-
+    # Antwort verarbeiten und anzeigen
+    feedback_text = response.choices[0].message.content.strip()
+    st.markdown("## 📝 Feedback on Your Conversation:")
+    st.write(feedback_text)
+except Exception as e:
+    st.error("An error occurred while generating feedback. Please try again later.")
+    st.error(f"Details: {str(e)}")
