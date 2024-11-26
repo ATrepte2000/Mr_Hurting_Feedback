@@ -105,19 +105,6 @@ Your production department made a minor change to the composition without custom
 - Ask for clarification if unsure about the customer’s responses or concerns.
 """
 
-    
-
-# Footer with image or logo
-st.markdown(
-    """
-    <div style="text-align: center; margin-top: 50px;">
-        <img src="data:image/png;base64,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" alt="Logo" width="150">
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
 
 #lesen des Open AI Keys 
 openai.api_key = st.secrets["openai_api_key"]
@@ -209,18 +196,16 @@ st.download_button(
 )
 # ... (Your existing imports and code)
 
+###########
+
 # After your existing code for displaying the conversation and download button, add the following:
 
 # Button to generate feedback
 if st.button("📝 Get Feedback on Your Conversation"):
-    # Collect the conversation history
-    conversation_text = ""
-    for message in st.session_state.messages:
-        if message['role'] != 'system':
-            conversation_text += f"{message['role'].capitalize()}: {message['content']}\n\n"
+   
 
     # Construct the feedback prompt
-    feedback_prompt = f"""
+    feedback_prompt = """
     As an expert negotiation coach, provide detailed feedback on the following conversation between a customer and a salesperson. Highlight the customer's negotiation strategies, emotional intelligence, and areas for improvement. Offer practical advice to enhance their negotiation skills.
 
     Conversation:
@@ -228,16 +213,21 @@ if st.button("📝 Get Feedback on Your Conversation"):
     """
 
     try:
-        # Generate feedback using the OpenAI API
-        feedback_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Use a suitable model
-            messages=[
+    response = openai.chat.completions.create(
+        model="gpt-4o-mini",  
+        messages=  messages=[
                 {"role": "system", "content": "You are an expert negotiation coach."},
                 {"role": "user", "content": feedback_prompt}
             ],
             temperature=0.7,
             max_tokens=500,
-        )
+    )
+    # Extrahiere die Antwort
+    feedback_text = response.choices[0].message.content
+    
+
+
+
 
         # Extract and display the feedback
         feedback_text = feedback_response.choices[0].message.content.strip()
