@@ -204,12 +204,12 @@ st.download_button(
 if st.button("📝 Get Feedback on Your Conversation"):
    
 
-feedback_prompt = f"""
-As an expert negotiation coach, provide detailed feedback on the following conversation between a customer and a salesperson. Highlight the customer's negotiation strategies, emotional intelligence, and areas for improvement. Offer practical advice to enhance their negotiation skills.
-
-Conversation:
-{conversation_text}
-"""
+    feedback_prompt = f"""
+    As an expert negotiation coach, provide detailed feedback on the following conversation between a customer and a salesperson. Highlight the customer's negotiation strategies, emotional intelligence, and areas for improvement. Offer practical advice to enhance their negotiation skills.
+    
+    Conversation:
+    {conversation_text}
+    """
 
 
     try:
