@@ -197,37 +197,35 @@ st.download_button(
 # ... (Your existing imports and code)
 
 ###########
-# Button zum Generieren von Feedback
-if st.button("📝 Feedback zu deiner Konversation erhalten"):
+# Button zum Generieren von Feedback hinzufügen
+if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
+    # Konstruiere den Prompt für das Feedback
+    feedback_prompt = f"""
+    Als Experte für Verhandlungsführung geben Sie detailliertes Feedback zu der folgenden Konversation zwischen einem Kunden und einem Verkäufer. 
+    Heben Sie die Verhandlungsstrategien, emotionale Intelligenz und Verbesserungsmöglichkeiten des Kunden hervor. 
+    Bieten Sie praktische Ratschläge, um seine Verhandlungsfähigkeiten zu verbessern.
 
-      # Erstelle eine Kopie der bisherigen Nachrichten und füge die Feedback-Anfrage hinzu
-        feedback_messages = st.session_state.messages.copy()
-        feedback_messages.append({
-            "role": "user",
-            "content": "Als Experte für Verhandlungsführung, bitte ich um ein detailliertes Feedback zu der obigen Konversation zwischen einem Kunden und einem Verkäufer. Bitte hebe die Verhandlungsstrategien des Kunden, seine emotionale Intelligenz und Verbesserungspotenziale hervor. Gib praktische Ratschläge, um seine Verhandlungsfähigkeiten zu verbessern."
-        })
+    Konversation:
+    {conversation_text}
+    """
 
     try:
-
-          response = openai.chat.completions.create(
-            model="gpt-4o-mini",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
-            messages=feedback_messages,
-            temperature=0.5
-            # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
-     
+        # Generiere das Feedback über die OpenAI API
+        feedback_response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # Oder "gpt-4", je nach Verfügbarkeit
+            messages=[
+                {"role": "system", "content": "Sie sind ein Experte für Verhandlungsführung."},
+                {"role": "user", "content": feedback_prompt}
+            ],
+            temperature=0.7,
+            max_tokens=500,
         )
 
-        # Extrahiere die Antwort
-        assistant_response = response.choices[0].message.content
-        
-        # Antwort anzeigen und im Sitzungszustand speichern
-        st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-        with st.chat_message("assistant"):
-            st.markdown(assistant_response)
+        # Extrahiere und zeige das Feedback
+        feedback_text = feedback_response.choices[0].message.content.strip()
+        st.markdown("## 📝 Feedback zu Ihrer Konversation:")
+        st.write(feedback_text)
 
-    
-       
     except Exception as e:
-        st.error("Ein Fehler ist aufgetreten. Bitte versuche es später erneut.")
+        st.error("Ein Fehler ist aufgetreten beim Generieren des Feedbacks. Bitte versuchen Sie es später erneut.")
         st.write(e)
-
