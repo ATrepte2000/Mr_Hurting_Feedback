@@ -200,6 +200,23 @@ st.download_button(
 # Button zum Generieren von Feedback
 if st.button("📝 Feedback zu deiner Konversation erhalten"):
     try:
+
+          response = openai.chat.completions.create(
+            model="gpt-4o-mini",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
+            messages=st.session_state.messages,
+            temperature=0.5
+            # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
+     
+        )
+
+        # Extrahiere die Antwort
+        assistant_response = response.choices[0].message.content
+        
+        # Antwort anzeigen und im Sitzungszustand speichern
+        st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+        with st.chat_message("assistant"):
+            st.markdown(assistant_response)
+
         # Erstelle eine Kopie der bisherigen Nachrichten und füge die Feedback-Anfrage hinzu
         feedback_messages = st.session_state.messages.copy()
         feedback_messages.append({
