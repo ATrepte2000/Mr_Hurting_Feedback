@@ -197,9 +197,6 @@ st.download_button(
 # ... (Your existing imports and code)
 
 ###########
-
-# ... (Your existing imports and code)
-
 # Button zum Generieren von Feedback
 if st.button("📝 Feedback zu deiner Konversation erhalten"):
     try:
@@ -212,17 +209,18 @@ if st.button("📝 Feedback zu deiner Konversation erhalten"):
 
         # Generiere Feedback mit der OpenAI API
         feedback_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Verwende ein geeignetes Modell
+            model="gpt-3.5-turbo",
             messages=feedback_messages,
             temperature=0.7,
             max_tokens=500,
         )
 
         # Extrahiere und zeige das Feedback an
-        feedback_text = feedback_response.choices[0].message.content.strip()
+        feedback_text = feedback_response['choices'][0]['message']['content'].strip()
         st.markdown("## 📝 Feedback zu deiner Konversation:")
         st.write(feedback_text)
 
     except Exception as e:
         st.error("Ein Fehler ist aufgetreten. Bitte versuche es später erneut.")
         st.write(e)
+
