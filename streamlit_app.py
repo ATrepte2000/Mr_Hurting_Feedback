@@ -207,3 +207,44 @@ st.download_button(
     file_name='konversation.txt',
     mime='text/plain'
 )
+# ... (Your existing imports and code)
+
+# After your existing code for displaying the conversation and download button, add the following:
+
+# Button to generate feedback
+if st.button("📝 Get Feedback on Your Conversation"):
+    # Collect the conversation history
+    conversation_text = ""
+    for message in st.session_state.messages:
+        if message['role'] != 'system':
+            conversation_text += f"{message['role'].capitalize()}: {message['content']}\n\n"
+
+    # Construct the feedback prompt
+    feedback_prompt = f"""
+    As an expert negotiation coach, provide detailed feedback on the following conversation between a customer and a salesperson. Highlight the customer's negotiation strategies, emotional intelligence, and areas for improvement. Offer practical advice to enhance their negotiation skills.
+
+    Conversation:
+    {conversation_text}
+    """
+
+    try:
+        # Generate feedback using the OpenAI API
+        feedback_response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # Use a suitable model
+            messages=[
+                {"role": "system", "content": "You are an expert negotiation coach."},
+                {"role": "user", "content": feedback_prompt}
+            ],
+            temperature=0.7,
+            max_tokens=500,
+        )
+
+        # Extract and display the feedback
+        feedback_text = feedback_response.choices[0].message.content.strip()
+        st.markdown("## 📝 Feedback on Your Conversation:")
+        st.write(feedback_text)
+
+    except Exception as e:
+        st.error("An error occurred while generating feedback. Please try again later.")
+        st.write(e)
+
