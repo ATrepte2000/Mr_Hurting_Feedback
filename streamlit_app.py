@@ -209,14 +209,16 @@ if st.button("📝 Feedback zu deiner Konversation erhalten"):
 
         feedback_response = openai.ChatCompletion.create(
             model="gpt-4o-mini",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
-            feedback_messages,
+            messages=[
+                {"role": "system", "content": "You give insightfull feedback."},
+                {"role": "user", "content": feedback_messages} 
+            ],
             temperature=0.5
             # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
-     
         )
 
        
-        st.write(feedback_response)
+        st.write(feedback_response.choices[0].message)
 
     except Exception as e:
         st.error("Ein Fehler ist aufgetreten. Bitte versuche es später erneut.")
