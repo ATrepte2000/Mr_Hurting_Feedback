@@ -197,7 +197,6 @@ st.download_button(
 # ... (Your existing imports and code)
 
 ###########
-# Button zum Generieren von Feedback hinzufügen
 if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     # Konstruiere den Prompt für das Feedback
     feedback_prompt = f"""
@@ -212,14 +211,13 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     # API-Anfrage zur Generierung der Antwort basierend auf der Konversation
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
+            model="gpt-4",  # Verwende das richtige Modell
             messages=[{"role": "system", "content": feedback_prompt}],
             temperature=0.5
-            # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
         )
 
         # Extrahiere die Antwort
-        assistant_response = response.choices[0].message.content
+        assistant_response = response.choices[0].message["content"]
 
         # Antwort anzeigen und im Sitzungszustand speichern
         st.session_state.messages.append({"role": "assistant", "content": assistant_response})
