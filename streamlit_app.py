@@ -215,10 +215,8 @@ if st.button("📝 Feedback zu deiner Konversation erhalten"):
      
         )
 
-        # Extrahiere und zeige das Feedback an
-        feedback_text = feedback_response['choices'][0]['message']['content'].strip()
-        st.markdown("## 📝 Feedback zu deiner Konversation:")
-        st.write(feedback_text)
+       
+        st.write(feedback_response)
 
     except Exception as e:
         st.error("Ein Fehler ist aufgetreten. Bitte versuche es später erneut.")
