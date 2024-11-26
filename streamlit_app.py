@@ -207,9 +207,9 @@ if st.button("📝 Feedback zu deiner Konversation erhalten"):
             "content": "Als Experte für Verhandlungsführung, bitte ich um ein detailliertes Feedback zu der obigen Konversation zwischen einem Kunden und einem Verkäufer. Bitte hebe die Verhandlungsstrategien des Kunden, seine emotionale Intelligenz und Verbesserungspotenziale hervor. Gib praktische Ratschläge, um seine Verhandlungsfähigkeiten zu verbessern."
         })
 
-        feedback_response = openai.chat.completions.create(
+        feedback_response = openai.ChatCompletion.create(
             model="gpt-4o-mini",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
-            messages= st.session_state.messages.copy(),
+            feedback_messages,
             temperature=0.5
             # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
      
