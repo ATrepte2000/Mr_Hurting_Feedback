@@ -209,25 +209,24 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     {conversation_text}
     """
 
-  
+    # API-Anfrage zur Generierung der Antwort basierend auf der Konversation
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
+            messages=[{"role": "system", "content": feedback_prompt}],
+            temperature=0.5
+            # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
+        )
 
-        # API-Anfrage zur Generierung der Antwort basierend auf der Konversation
-        try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4o-mini",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
-                feedback_prompt,
-                temperature=0.5
-                # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
-            )
+        # Extrahiere die Antwort
+        assistant_response = response.choices[0].message.content
 
-            # Extrahiere die Antwort
-            assistant_response = response.choices[0].message.content
+        # Antwort anzeigen und im Sitzungszustand speichern
+        st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+        with st.chat_message("assistant"):
+            st.markdown(assistant_response)
 
-            # Antwort anzeigen und im Sitzungszustand speichern
-            st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-            with st.chat_message("assistant"):
-                st.markdown(assistant_response)
+    except Exception as e:
+        st.error("Ein Fehler ist aufgetreten. Bitte überprüfe die API-Konfiguration oder versuche es später erneut.")
+        st.write(e)
 
-        except Exception as e:
-            st.error("Ein Fehler ist aufgetreten. Bitte überprüfe die API-Konfiguration oder versuche es später erneut.")
-            st.write(e)
