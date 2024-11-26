@@ -79,6 +79,7 @@ st.markdown(
 
 
 
+
 #lesen des Open AI Keys 
 openai.api_key = st.secrets["openai_api_key"]
 
@@ -201,4 +202,3 @@ def upload_to_github(file_path, content):
     else:
         st.error("Fehler beim Hochladen der Konversation zu GitHub.")
         st.write(response.json())
-
