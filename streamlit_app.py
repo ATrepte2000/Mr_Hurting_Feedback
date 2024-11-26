@@ -208,27 +208,42 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     Konversation:
     {conversation_text}
     """
-
-    try:
+   # Initialisiere den Sitzungszustand nur beim ersten Start
         if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
-
-for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
-
-if prompt := st.chat_input():
-    if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
-
-    client = OpenAI(api_key=openai_api_key)
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    st.chat_message("user").write(prompt)
-    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=st.session_state.messages)
-    msg = response.choices[0].message.content
-    st.session_state.messages.append({"role": "assistant", "content": msg})
-    st.chat_message("assistant").write(msg)
+            st.session_state.messages = [{"role": "system", "content": feedback_prompt}]
+        
+        # Zeige bisherige Benutzer- und Assistenten-Nachrichten an (ohne den system prompt)
+        for message in st.session_state.messages:
+            if message["role"] != "system":
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
+        
+        # Chat-Eingabefeld für Benutzernachrichten
+        if user_input := st.chat_input("..."):
+            # Benutzer-Nachricht hinzufügen
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            with st.chat_message("user"):
+                st.markdown(user_input)
+        
+            # API-Anfrage zur Generierung der Antwort basierend auf der Konversation
+            try:
+                response = openai.chat.completions.create(
+                    model="gpt-4o-mini",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
+                    messages=st.session_state.messages,
+                    temperature=0.5
+                    # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
+             
+                )
+        
+                # Extrahiere die Antwort
+                assistant_response = response.choices[0].message.content
+                
+                # Antwort anzeigen und im Sitzungszustand speichern
+                st.session_state.messages.append({"role": "assistant", "content": assistant_response})
+                with st.chat_message("assistant"):
+                    st.markdown(assistant_response)
 
     except Exception as e:
-        st.error("Ein Fehler ist aufgetreten beim Generieren des Feedbacks. Bitte versuchen Sie es später erneut.")
+        st.error("Ein Fehler ist aufgetreten. Bitte überprüfe die API-Konfiguration oder versuche es später erneut.")
         st.write(e)
+   
