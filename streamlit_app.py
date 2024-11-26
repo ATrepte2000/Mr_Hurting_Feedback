@@ -208,16 +208,11 @@ def upload_to_github(file_path, content):
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": bot_instructions}]
 
-# Zeige bisherige Nachrichten an
-# ... (dein Code zum Anzeigen der Nachrichten)
-
-# Chat-Eingabefeld für Benutzernachrichten
-# ... (dein Code für die Chat-Eingabe)
 
 # Speichere die Konversation und lade sie zu GitHub hoch
 # Erstelle einen Ordner zum Speichern der Konversationen, falls nicht vorhanden
-if not os.path.exists('conversations'):
-    os.makedirs('conversations')
+if not os.path.exists('conversations1'):
+    os.makedirs('conversations1')
 
 # Generiere einen eindeutigen Dateinamen für jede Sitzung
 session_id = st.session_state.get('session_id', None)
@@ -227,7 +222,7 @@ if session_id is None:
     st.session_state['session_id'] = session_id
 
 # Pfad zur Konversationsdatei
-conversation_file = f'conversations/conversation_{session_id}.txt'
+conversation_file = f'conversations1/conversation_{session_id}.txt'
 
 # Speichere die Konversation in der Datei
 conversation_text = ""
