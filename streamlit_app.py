@@ -211,20 +211,15 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
 
     try:
         # Generiere das Feedback über die OpenAI API
-        feedback_response = openai.ChatCompletion.create(
+        feedback_response = openai.chat.completions.create(
             model="gpt-3.5-turbo",  # Oder "gpt-4", je nach Verfügbarkeit
-            messages=[
-                {"role": "system", "content": "Sie sind ein Experte für Verhandlungsführung."},
-                {"role": "user", "content": feedback_prompt}
-            ],
-            temperature=0.7,
-            max_tokens=500,
+            messages=[{"role": "system", "content": "Sag das ist ein test."}],
+            Stream = True
         )
 
         # Extrahiere und zeige das Feedback
-        feedback_text = feedback_response.choices[0].message.content.strip()
-        st.markdown("## 📝 Feedback zu Ihrer Konversation:")
-        st.write(feedback_text)
+        
+        st.write(feedback_response)
 
     except Exception as e:
         st.error("Ein Fehler ist aufgetreten beim Generieren des Feedbacks. Bitte versuchen Sie es später erneut.")
