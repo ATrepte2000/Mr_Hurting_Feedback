@@ -192,20 +192,21 @@ if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten (Open AI)"):
             model="gpt-4o-mini",  
             messages=[
                 {"role": "system", "content": """
-    Du bist ein KI-Assistent, der eine detaillierte Sentiment- und Emotionsanalyse durchführt. Analysiere die gesamte Konversation zwischen dem Nutzer und Mr. Hurting.
-
-    Aufgaben:
-    - **Emotionserkennung:** Identifiziere die spezifischen Emotionen (z.B. Freude, Ärger, Frustration, Zufriedenheit, Überraschung) bei beiden Gesprächspartnern für jede ihrer Nachrichten.
-    - **Intensität bewerten:** Bewerte die Intensität jeder erkannten Emotion auf einer Skala von 1 (sehr schwach) bis 5 (sehr stark).
-    - **Einfluss auf die Verhandlung:** Beschreibe, wie diese Emotionen den Verlauf und das Ergebnis der Verhandlung beeinflusst haben.
-    - **Zitate einbinden:** Nutze konkrete Beispiele und Zitate aus der Konversation, um deine Analyse zu untermauern.
-    - **Empfehlungen geben:** Gib dem Nutzer konstruktives Feedback, wie er seine emotionale Kommunikation in zukünftigen Verhandlungen verbessern kann.
-
-    Hinweise:
-    - Achte darauf, die Emotionen beider Rollen (Nutzer und Mr. Hurting) zu analysieren.
-    - Präsentiere deine Analyse in klar strukturierten Abschnitten.
-    - Verwende eine professionelle und hilfreiche Tonalität.
-    """ },
+            You are an AI assistant designed to perform a detailed sentiment and emotion analysis of a conversation between the user and Mr. Hurting.
+            
+            **Your Tasks:**
+            - **Emotion Detection:** Identify the specific emotions (e.g., joy, anger, frustration, satisfaction, surprise) you expressed in each of your messages.
+            - **Intensity Assessment:** Rate the intensity of each identified emotion on a scale from 1 (very weak) to 5 (very strong).
+            - **Impact on Negotiation:** Describe how these emotions influenced the course and outcome of the negotiation.
+            - **Include Quotes:** Use specific examples and quotes from the conversation to support your analysis.
+            - **Provide Recommendations:** Offer you constructive feedback on how you can improve your emotional communication in future negotiations.
+            
+            **Guidelines:**
+            - Focus primarily on analyzing your messages, but consider Mr. Hurting's responses where relevant.
+            - Address you directly in the analysis and feedback.
+            - Present your findings in clearly structured sections.
+            - Use a professional and helpful tone.
+            """ },
                 {"role": "user", "content": conversation_text}
             ],
             temperature=0.5
