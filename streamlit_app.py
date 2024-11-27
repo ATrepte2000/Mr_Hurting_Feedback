@@ -192,37 +192,50 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
+# NLTK-Daten herunterladen (nur beim ersten Mal nötig)
+nltk.download('stopwords')
+
+# Vektorisierer und Modelle laden
+vectorizer = joblib.load('vectorizer.pkl')  # Pfad anpassen
+
+use_nb = True
+use_svm = False
+use_lr = False
+
+if use_nb:
+    nb_model = joblib.load('nb_model.pkl')  # Pfad anpassen
+if use_svm:
+    svm_model = joblib.load('svm_model.pkl')  # Pfad anpassen
+if use_lr:
+    lr_model = joblib.load('lr_model.pkl')  # Pfad anpassen
 
 if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten"):
     def preprocess_text(text):
-    text = re.sub(r'[^a-zA-Z\s]', '', text)  # Remove punctuation
-    text is text.lower()  # Convert to lowercase
-    text = text.split()  # Split into words
-    ps = PorterStemmer()
-    text = [ps.stem(word) for word in text if not word in set(stopwords.words('english'))]  # Remove stopwords and perform stemming
-    text = ' '.join(text)
-    return text
+        text = text.lower()  # Convert to lowercase
+        text = text.split()  # Split into words
+        ps = PorterStemmer()
+        text = [ps.stem(word) for word in text if not word in set(stopwords.words('english'))]  # Remove stopwords and perform stemming
+        text = ' '.join(text)
+        return text
 
+    # Angenommen, 'conversation_text' ist definiert
+    input_text = conversation_text  # Definiere 'conversation_text' entsprechend
+    input_text_processed = preprocess_text(input_text)
+    input_text_vect = vectorizer.transform([input_text_processed])
 
-# Process the input text
-        input_text_processed = preprocess_text(conversation_text)
-        input_text_vect = vectorizer.transform([input_text_processed])
-
-        st.write(f"**Input Text:** {input_text}")
-        
-        # Prediction using Naive Bayes
-        if use_nb:
-            nb_prediction = nb_model.predict(input_text_vect)[0]
-            nb_prob = nb_model.predict_proba(input_text_vect)[0]
-            st.write(f"**Naive Bayes Prediction:** {'Positive' if nb_prediction == 1 else 'Negative'} (Confidence: {nb_prob[nb_prediction]:.2f})")
-        # Prediction using SVM
-        if use_svm:
-            svm_prediction = svm_model.predict(input_text_vect)[0]
-            st.write(f"**SVM Prediction:** {'Positive' if svm_prediction == 1 else 'Negative'}")
-        # Prediction using Logistic Regression
-        if use_lr:
-            lr_prediction = lr_model.predict(input_text_vect)[0]
-            lr_prob = lr_model.predict_proba(input_text_vect)[0]
-            st.write(f"**Logistic Regression Prediction:** {'Positive' if lr_prediction == 1 else 'Negative'} (Confidence: {lr_prob[lr_prediction]:.2f})")
+    st.write(f"**Input Text:** {input_text}")
     
-   
+    # Prediction using Naive Bayes
+    if use_nb:
+        nb_prediction = nb_model.predict(input_text_vect)[0]
+        nb_prob = nb_model.predict_proba(input_text_vect)[0]
+        st.write(f"**Naive Bayes Prediction:** {'Positive' if nb_prediction == 1 else 'Negative'} (Confidence: {nb_prob[nb_prediction]:.2f})")
+    # Prediction using SVM
+    if use_svm:
+        svm_prediction = svm_model.predict(input_text_vect)[0]
+        st.write(f"**SVM Prediction:** {'Positive' if svm_prediction == 1 else 'Negative'}")
+    # Prediction using Logistic Regression
+    if use_lr:
+        lr_prediction = lr_model.predict(input_text_vect)[0]
+        lr_prob = lr_model.predict_proba(input_text_vect)[0]
+        st.write(f"**Logistic Regression Prediction:** {'Positive' if lr_prediction == 1 else 'Negative'} (Confidence: {lr_prob[lr_prediction]:.2f})")
