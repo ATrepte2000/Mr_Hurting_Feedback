@@ -114,8 +114,8 @@ for message in st.session_state.messages: ## alle Messages die in der messages L
 # Chat-Eingabefeld für Benutzernachrichten
 if user_input := st.chat_input("..."): ## wenn der Nuter etwas antwortet, mache das: chat_iput - streamlit input for chatbots, user_input ist eine Variable die den nutzer input speichert
     # Benutzer-Nachricht hinzufügen
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
+    st.session_state.messages.append({"role": "user", "content": user_input}) ###streamlit erwartet eine rolle und einen inhalt, in dieser liste
+    with st.chat_message("user"): ## zeigt den User input auf dem Screen an
         st.markdown(user_input)
 
     # API-Anfrage zur Generierung der Antwort basierend auf der Konversation
@@ -139,50 +139,8 @@ if user_input := st.chat_input("..."): ## wenn der Nuter etwas antwortet, mache 
         st.error("Ein Fehler ist aufgetreten. Bitte überprüfe die API-Konfiguration oder versuche es später erneut.")
         st.write(e)
 
-import json
-import os
 
-# zusätzlicher Code für den Feedback Button
-
-# Erstelle einen Ordner zum Speichern der Konversationen, falls nicht vorhanden
-if not os.path.exists('conversations'):
-    os.makedirs('conversations')
-
-# Generiere einen eindeutigen Dateinamen für jede Sitzung
-session_id = st.session_state.get('session_id', None)
-if session_id is None:
-    import uuid
-    session_id = str(uuid.uuid4())
-    st.session_state['session_id'] = session_id
-
-# Pfad zur Konversationsdatei
-conversation_file = f'conversations/conversation_{session_id}.txt'
-
-# Speichere die Konversation in der Datei
-with open(conversation_file, 'w') as f:
-    for message in st.session_state.messages:
-        if message['role'] != 'system':
-            f.write(f"{message['role'].capitalize()}: {message['content']}\n\n")
-
-
-# Füge diesen Code an einer geeigneten Stelle in deiner App hinzu, z.B. am Ende
-
-# Konversation als Text zusammenfassen
-conversation_text = ""
-for message in st.session_state.messages:
-    if message['role'] != 'system':
-        conversation_text += f"{message['role'].capitalize()}: {message['content']}\n\n"
-
-# Download-Button anzeigen
-st.download_button(
-    label="📥 Konversation herunterladen",
-    data=conversation_text,
-    file_name='konversation.txt',
-    mime='text/plain'
-)
-# ... (Your existing imports and code)
-
-###########
+########### Feedback generierung
 
 if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     # Konstruiere den Prompt für das Feedback
@@ -195,21 +153,21 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     {conversation_text}
     """
 
-    # API-Anfrage zur Generierung der Antwort basierend auf der Konversation
+
+    ###Ausprobieren vom Video 
+  # API-Anfrage zur Generierung der Antwort basierend auf der Konversation
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",  # Verwende das richtige Modell
-            messages=[{"role": "system", "content": feedback_prompt}],
+        feedback_response = openai.chat.completions.create(
+            model="gpt-4o-mini",  
+            messages=[{"role", "system", "content": "You give feedback"},
+                     {"role", "user", "content": feedback_prompt},]
             temperature=0.5
+            # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
         )
 
         # Extrahiere die Antwort
-        assistant_response = response.choices[0].message["content"]
-
-        # Antwort anzeigen und im Sitzungszustand speichern
-        st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-        with st.chat_message("assistant"):
-            st.markdown(assistant_response)
+        feedback_response = feedback_response.choices[0].message.content ## choise sagt es soll nur eine antwort generieren 
+        st.markdown(feedback_response);
 
     except Exception as e:
         st.error("Ein Fehler ist aufgetreten. Bitte überprüfe die API-Konfiguration oder versuche es später erneut.")
