@@ -142,6 +142,10 @@ if user_input := st.chat_input("..."): ## wenn der Nuter etwas antwortet, mache 
 
 ########### Feedback generierung
 
+conversation_text = "\n".join(
+    [f"{msg['role']}: {msg['content']}" for msg in st.session_state.messages if msg['role'] != "system"]
+)
+
 if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     # Konstruiere den Prompt für das Feedback
     feedback_prompt = f"""
@@ -159,8 +163,10 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     try:
         feedback_response = openai.chat.completions.create(
             model="gpt-4o-mini",  
-            messages=[{"role", "system", "content": "You give feedback"},
-                     {"role", "user", "content": feedback_prompt},]
+            messages=[
+                {"role": "system", "content": "You give feedback"},
+                {"role": "user", "content": feedback_prompt}
+            ],
             temperature=0.5
             # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
         )
@@ -170,6 +176,6 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
         st.markdown(feedback_response);
 
     except Exception as e:
-        st.error("Ein Fehler ist aufgetreten. Bitte überprüfe die API-Konfiguration oder versuche es später erneut.")
-        st.write(e)
+        st.error("Ein Fehler ist aufgetreten. Bitte überprüfen Sie die API-Konfiguration oder versuchen Sie es später erneut.")
+        st.write(f"Details: {e}")
 
