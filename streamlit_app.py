@@ -220,3 +220,12 @@ if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten (Open AI)"):
     except Exception as e:
         st.error("Ein Fehler ist aufgetreten. Bitte überprüfen Sie die API-Konfiguration oder versuchen Sie es später erneut.")
         st.write(f"Details: {e}")
+
+#### Emotion analysis j-hartman Model
+from transformers import pipeline
+if st.button("📝 Emotion analysis with the j-hartman Model"):
+    
+classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
+classifier("conversation_text")
+
+    
