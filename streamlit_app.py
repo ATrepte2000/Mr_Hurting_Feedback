@@ -192,7 +192,7 @@ if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten (Open AI)"):
             model="gpt-4o-mini",  
             messages=[
                 {"role": "system", "content": """
-            You are an AI assistant designed to perform a detailed sentiment and emotion analysis of a conversation between the user and Mr. Hurting.
+            You are an AI assistant designed to perform a detailed sentiment and emotion analysis of a conversation between the user.
             
             **Your Tasks:**
             - **Emotion Detection:** Identify the specific emotions (e.g., joy, anger, frustration, satisfaction, surprise) you expressed in each of your messages.
