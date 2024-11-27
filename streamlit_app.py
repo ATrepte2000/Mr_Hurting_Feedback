@@ -185,9 +185,42 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
         st.write(f"Details: {e}")
 
 #### Sentiment analyse
-from textblob import TextBlob
-if st.button("📝 Sentiment analyse zur Konversation erhalten"):
-    blob = TextBlob(conversation_text)
-    st.write('Polarity: ', round(blob.sentiment.polarity,2))
-    st.write('Subjectivity: ', round(blob.sentiment.subjectivity,2))
+
+!pip install transformers
+
+from transformers import pipeline
+
+if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten"):
+    sentiment_analyzer = pipeline("sentiment-analysis", model="oliverguhr/german-sentiment-bert")
+    user_messages = [msg['content'] for msg in st.session_state.messages if msg['role'] == 'user']
+    sentiments = sentiment_analyzer(user_messages)
+
+    # Feedback sammeln
+    feedback = ""
+    for i, sentiment in enumerate(sentiments):
+        feedback += f"**Ihre Nachricht:** {user_messages[i]}\n"
+        feedback += f"**Sentiment:** {sentiment['label']} (Score: {sentiment['score']:.2f})\n\n"
+
+    st.markdown(feedback)
+
+    # Gesamteinschätzung
+    positive = sum(1 for s in sentiments if s['label'] == 'positive')
+    negative = sum(1 for s in sentiments if s['label'] == 'negative')
+    neutral = sum(1 for s in sentiments if s['label'] == 'neutral')
+
+    st.write("### Gesamteinschätzung:")
+    if positive > negative:
+        st.write("Ihre Kommunikation war insgesamt **positiv**.")
+    elif negative > positive:
+        st.write("Ihre Kommunikation war insgesamt **negativ**.")
+    else:
+        st.write("Ihre Kommunikation war insgesamt **neutral**.")
+
+    # Vorschläge zur Verbesserung
+    st.write("### Vorschläge zur Verbesserung:")
+    if negative > 0:
+        st.write("- Versuchen Sie, eine positivere Sprache zu verwenden, um eine bessere Beziehung aufzubauen.")
+    if neutral > positive and neutral > negative:
+        st.write("- Mehr Ausdruck von Emotionen könnte die Kommunikation verbessern.")
+
 
