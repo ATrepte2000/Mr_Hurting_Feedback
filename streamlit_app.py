@@ -225,7 +225,7 @@ if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten (Open AI)"):
 from transformers import pipeline
 
 # Emotion analysis using the j-hartmann Model
-if st.button("📝 Emotion analysis with the j-hartman Model"):
+if st.button("📝 Emotion analysis with the j-hartman Model: Overall Emotionscore of the userinputs"):
     # Collect all user messages (excluding system and assistant messages)
     user_messages = [msg['content'] for msg in st.session_state.messages if msg['role'] == 'user']
 
@@ -244,4 +244,28 @@ if st.button("📝 Emotion analysis with the j-hartman Model"):
         label = emotion['label']
         score = emotion['score']
         st.write(f"{label}: {score:.2f}")
+
+# Emotion analysis using the j-hartmann Model every message
+if st.button("📝 Emotion analysis of each message with the j-hartmann Model"):
+    # Collect all user messages (excluding system and assistant messages)
+    user_messages = [msg['content'] for msg in st.session_state.messages if msg['role'] == 'user']
+
+    # Initialize the classifier
+    classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
+
+    # Display the results
+    st.write("### Emotion Analysis Results for Each User Input:")
+
+    for idx, message in enumerate(user_messages):
+        st.write(f"#### Message {idx+1}: {message}")
+
+        # Perform emotion analysis
+        results = classifier(message)
+
+        # Display the results
+        for emotion_score in results[0]:
+            label = emotion_score['label']
+            score = emotion_score['score']
+            st.write(f"- **{label}**: {score:.2f}")
+        st.write("---")  # Separator between messages
 
