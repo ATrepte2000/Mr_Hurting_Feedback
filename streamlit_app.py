@@ -186,7 +186,7 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
 
 #### Sentiment analyse
 
-!pip install transformers
+
 
 from transformers import pipeline
 
