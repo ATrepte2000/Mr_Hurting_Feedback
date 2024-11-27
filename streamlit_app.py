@@ -185,43 +185,45 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
         st.write(f"Details: {e}")
 
 #### Sentiment analyse
-from transformers import pipeline
 import streamlit as st
+import joblib
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+
 
 if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten"):
-    try:
-        sentiment_analyzer = pipeline("sentiment-analysis", model="oliverguhr/german-sentiment-bert")
-    except Exception as e:
-        st.error("Fehler beim Laden des Sentiment-Analysemodells.")
-        st.write(f"Details: {e}")
-    else:
-        user_messages = [msg['content'] for msg in st.session_state.messages if msg['role'] == 'user']
-        sentiments = sentiment_analyzer(user_messages)
+    def preprocess_text(text):
+    text = re.sub(r'http\S+', '', text)  # Remove URLs
+    text = re.sub(r'[^a-zA-Z\s]', '', text)  # Remove punctuation
+    text is text.lower()  # Convert to lowercase
+    text = text.split()  # Split into words
+    ps = PorterStemmer()
+    text = [ps.stem(word) for word in text if not word in set(stopwords.words('english'))]  # Remove stopwords and perform stemming
+    text = ' '.join(text)
+    return text
 
-        # Feedback sammeln
-        feedback = ""
-        for i, sentiment in enumerate(sentiments):
-            feedback += f"**Ihre Nachricht:** {user_messages[i]}\n"
-            feedback += f"**Sentiment:** {sentiment['label']} (Score: {sentiment['score']:.2f})\n\n"
 
-        st.markdown(feedback)
+# Process the input text
+        input_text_processed = preprocess_text(conversation_text)
+        input_text_vect = vectorizer.transform([input_text_processed])
 
-        # Gesamteinschätzung
-        positive = sum(1 for s in sentiments if s['label'] == 'positive')
-        negative = sum(1 for s in sentiments if s['label'] == 'negative')
-        neutral = sum(1 for s in sentiments if s['label'] == 'neutral')
-
-        st.write("### Gesamteinschätzung:")
-        if positive > negative:
-            st.write("Ihre Kommunikation war insgesamt **positiv**.")
-        elif negative > positive:
-            st.write("Ihre Kommunikation war insgesamt **negativ**.")
-        else:
-            st.write("Ihre Kommunikation war insgesamt **neutral**.")
-
-        # Vorschläge zur Verbesserung
-        st.write("### Vorschläge zur Verbesserung:")
-        if negative > 0:
-            st.write("- Versuchen Sie, eine positivere Sprache zu verwenden, um eine bessere Beziehung aufzubauen.")
-        if neutral > positive and neutral > negative:
-            st.write("- Mehr Ausdruck von Emotionen könnte die Kommunikation verbessern.")
+        st.write(f"**Input Text:** {input_text}")
+        
+        # Prediction using Naive Bayes
+        if use_nb:
+            nb_prediction = nb_model.predict(input_text_vect)[0]
+            nb_prob = nb_model.predict_proba(input_text_vect)[0]
+            st.write(f"**Naive Bayes Prediction:** {'Positive' if nb_prediction == 1 else 'Negative'} (Confidence: {nb_prob[nb_prediction]:.2f})")
+        # Prediction using SVM
+        if use_svm:
+            svm_prediction = svm_model.predict(input_text_vect)[0]
+            st.write(f"**SVM Prediction:** {'Positive' if svm_prediction == 1 else 'Negative'}")
+        # Prediction using Logistic Regression
+        if use_lr:
+            lr_prediction = lr_model.predict(input_text_vect)[0]
+            lr_prob = lr_model.predict_proba(input_text_vect)[0]
+            st.write(f"**Logistic Regression Prediction:** {'Positive' if lr_prediction == 1 else 'Negative'} (Confidence: {lr_prob[lr_prediction]:.2f})")
+    
+   
