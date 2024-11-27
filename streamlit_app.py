@@ -188,7 +188,7 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
 
 
 
-from transformers import pipeline
+import pipeline
 
 if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten"):
     sentiment_analyzer = pipeline("sentiment-analysis", model="oliverguhr/german-sentiment-bert")
