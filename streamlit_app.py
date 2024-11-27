@@ -1,11 +1,8 @@
 import streamlit as st
 import openai
 
-
-
 # Configure page layout
 st.set_page_config(page_title="Mr Hurting - Your Negotiation Partner", page_icon="💬", layout="centered")
-
 
 # Transparent background for the content
 st.markdown(
@@ -76,8 +73,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-
+### Code für die KOnversation: 
 
 #lesen des Open AI Keys 
 openai.api_key = st.secrets["openai_api_key"]
@@ -105,17 +101,12 @@ Your production department made a minor change to the composition without custom
 - Ask for clarification if unsure about the customer’s responses or concerns.
 """
 
-
-#lesen des Open AI Keys 
-openai.api_key = st.secrets["openai_api_key"]
-
-
 # Initialisiere den Sitzungszustand nur beim ersten Start
-if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "system", "content": bot_instructions}]
+if "messages" not in st.session_state: ## Testet ob schon etwas in der messages list ist
+    st.session_state.messages = [{"role": "system", "content": bot_instructions}] ## speichert die Nachrichten hier 
 
 # Zeige bisherige Benutzer- und Assistenten-Nachrichten an (ohne den system prompt)
-for message in st.session_state.messages:
+for message in st.session_state.messages: ## alle Messages die in der messages List sind werden auf dem Interface angezeigt chat_message ist ein widget von streamlit
     if message["role"] != "system":
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -130,12 +121,11 @@ if user_input := st.chat_input("..."):
     # API-Anfrage zur Generierung der Antwort basierend auf der Konversation
     try:
         response = openai.chat.completions.create(
-            model="gpt-4o-mini",  # Das gewünschte Modell angeben, z.B. "gpt-3.5-turbo" oder "gpt-4"
+            model="gpt-4o-mini",  
             messages=st.session_state.messages,
             temperature=0.5
             # max_tokens=50 könnte man noch reinnehmen, bei Bedarf.
-     
-        )
+            )
 
         # Extrahiere die Antwort
         assistant_response = response.choices[0].message.content
@@ -149,14 +139,10 @@ if user_input := st.chat_input("..."):
         st.error("Ein Fehler ist aufgetreten. Bitte überprüfe die API-Konfiguration oder versuche es später erneut.")
         st.write(e)
 
-import streamlit as st
-import openai
 import json
 import os
 
-# ... Dein bisheriger Code ...
-
-# Füge diesen Code am Ende deiner Datei hinzu, nachdem die Antwort des Chatbots angezeigt wurde
+# zusätzlicher Code für den Feedback Button
 
 # Erstelle einen Ordner zum Speichern der Konversationen, falls nicht vorhanden
 if not os.path.exists('conversations'):
@@ -197,6 +183,7 @@ st.download_button(
 # ... (Your existing imports and code)
 
 ###########
+
 if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     # Konstruiere den Prompt für das Feedback
     feedback_prompt = f"""
