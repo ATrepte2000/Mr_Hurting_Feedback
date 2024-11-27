@@ -195,7 +195,6 @@ from nltk.stem import PorterStemmer
 
 if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten"):
     def preprocess_text(text):
-    text = re.sub(r'http\S+', '', text)  # Remove URLs
     text = re.sub(r'[^a-zA-Z\s]', '', text)  # Remove punctuation
     text is text.lower()  # Convert to lowercase
     text = text.split()  # Split into words
