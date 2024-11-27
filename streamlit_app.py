@@ -184,3 +184,10 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
         st.error("Ein Fehler ist aufgetreten. Bitte überprüfen Sie die API-Konfiguration oder versuchen Sie es später erneut.")
         st.write(f"Details: {e}")
 
+#### Sentiment analyse
+from textblob import TextBlob
+if st.button("📝 Sentiment analyse zur Konversation erhalten"):
+    blob = TextBlob(conversation_text)
+    st.write('Polarity: ', round(blob.sentiment.polarity,2))
+    st.write('Subjectivity: ', round(blob.sentiment.subjectivity,2))
+
