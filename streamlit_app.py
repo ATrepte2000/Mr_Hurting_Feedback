@@ -168,7 +168,7 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
                 The GPT provides detailed, constructive feedback for the user, naming the tactics used, how effectively they were applied, and assigning points based on their usage.
                 It references specific lines from the script as evidence, ensuring feedback is clear and substantiated. 
                 The feedback includes recommendations for improvement and alternative tactics for future negotiations.
-                The GPT addresses the user with "you", the user is the person that startes the conversation with "hello Mr. Hurting"
+                The GPT addresses the user with "you", the user is the person that startes the conversation with hello Mr. Hurting
                """},
                 {"role": "user", "content": feedback_prompt}
             ],
