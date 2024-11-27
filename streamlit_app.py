@@ -223,9 +223,25 @@ if st.button("📝 Sentimentanalyse zu Ihrer Konversation erhalten (Open AI)"):
 
 #### Emotion analysis j-hartman Model
 from transformers import pipeline
-if st.button("📝 Emotion analysis with the j-hartman Model"):
-    
-classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
-classifier("conversation_text")
 
-    
+# Emotion analysis using the j-hartmann Model
+if st.button("📝 Emotion analysis with the j-hartman Model"):
+    # Collect all user messages (excluding system and assistant messages)
+    user_messages = [msg['content'] for msg in st.session_state.messages if msg['role'] == 'user']
+
+    # Combine all user messages into one text
+    user_text = " ".join(user_messages)
+
+    # Initialize the classifier
+    classifier = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=True)
+
+    # Perform emotion analysis
+    results = classifier(user_text)
+
+    # Display the results
+    st.write("### Emotion Analysis Results:")
+    for emotion in results[0]:
+        label = emotion['label']
+        score = emotion['score']
+        st.write(f"{label}: {score:.2f}")
+
