@@ -112,7 +112,7 @@ for message in st.session_state.messages: ## alle Messages die in der messages L
             st.markdown(message["content"])
 
 # Chat-Eingabefeld für Benutzernachrichten
-if user_input := st.chat_input("Start the conversation with ..Hello Mr. Hurting..): ## wenn der Nuter etwas antwortet, mache das: chat_iput - streamlit input for chatbots, user_input ist eine Variable die den nutzer input speichert
+if user_input := st.chat_input("Start the conversation with ..Hello Mr. Hurting.."): ## wenn der Nuter etwas antwortet, mache das: chat_iput - streamlit input for chatbots, user_input ist eine Variable die den nutzer input speichert
     # Benutzer-Nachricht hinzufügen
     st.session_state.messages.append({"role": "user", "content": user_input}) ###streamlit erwartet eine rolle und einen inhalt, in dieser liste
     with st.chat_message("user"): ## zeigt den User input auf dem Screen an
