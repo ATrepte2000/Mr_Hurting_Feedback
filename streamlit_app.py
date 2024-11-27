@@ -73,7 +73,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-### Code für die KOnversation: 
+### Code für die Konversation: 
 
 #lesen des Open AI Keys 
 openai.api_key = st.secrets["openai_api_key"]
@@ -149,9 +149,7 @@ conversation_text = "\n".join(
 if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
     # Konstruiere den Prompt für das Feedback
     feedback_prompt = f"""
-    Als Experte für Verhandlungsführung geben Sie detailliertes Feedback zu der folgenden Konversation zwischen einem Kunden und einem Verkäufer. 
-    Heben Sie die Verhandlungsstrategien, emotionale Intelligenz und Verbesserungsmöglichkeiten des Kunden hervor. 
-    Bieten Sie praktische Ratschläge, um seine Verhandlungsfähigkeiten zu verbessern.
+    The conversation is below.
 
     Konversation:
     {conversation_text}
@@ -164,7 +162,14 @@ if st.button("📝 Feedback zu Ihrer Konversation erhalten"):
         feedback_response = openai.chat.completions.create(
             model="gpt-4o-mini",  
             messages=[
-                {"role": "system", "content": "You give feedback"},
+                {"role": "system", "content": """
+                This GPT is a negotiation expert designed to analyze uploaded negotiation scripts involving two parties. 
+                It identifies and evaluates negotiation tactics used by the user role, for example BATNA, avoiding urgency, or specific strategies like 'Last-Minute Deal Embellishment.' 
+                The GPT provides detailed, constructive feedback for the user, naming the tactics used, how effectively they were applied, and assigning points based on their usage.
+                It references specific lines from the script as evidence, ensuring feedback is clear and substantiated. 
+                The feedback includes recommendations for improvement and alternative tactics for future negotiations.
+                The GPT addresses the user with "you"
+               """},
                 {"role": "user", "content": feedback_prompt}
             ],
             temperature=0.5
